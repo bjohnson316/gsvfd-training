@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GSVFD Training Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: a library shelf — patch masthead, three labeled shelves of document buttons; the two SFFMA packets open in an in-page reader with a skill index rail. */
+:root {
+  --bg: #ECEEF1;
+  --surface: #FAFBFC;
+  --surface-2: #E2E5E9;
+  --ink: #17181A;
+  --muted: #545A62;
+  --line: #CDD2D8;
+  --red: #B5122B;
+  --red-soft: #F7E3E5;
+  --on-red: #FFF7F5;
+  --reader: #D3D8DE;
+  --display: 'Oswald', 'Arial Narrow', Arial, sans-serif;
+  --body: 'Public Sans', 'Segoe UI', Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131416; --surface: #1C1E21; --surface-2: #26292D; --ink: #EDEFF2; --muted: #A2A8B0;
+    --line: #34383D; --red: #E5484F; --red-soft: #3A1C1F; --on-red: #1A0B0C; --reader: #0D0E0F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131416; --surface: #1C1E21; --surface-2: #26292D; --ink: #EDEFF2; --muted: #A2A8B0;
+  --line: #34383D; --red: #E5484F; --red-soft: #3A1C1F; --on-red: #1A0B0C; --reader: #0D0E0F;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+
+/* ---------- Library (home) ---------- */
+.library { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 64px; display: flex; flex-direction: column; gap: 40px; }
+.masthead { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+.masthead img { width: 112px; height: auto; flex: none; }
+.masthead .text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
+h1 { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 6vw, 56px); line-height: 1.02; text-transform: uppercase; letter-spacing: 0.01em; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 62ch; margin: 0; }
+.shelf { display: flex; flex-direction: column; gap: 14px; }
+.shelf-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 8px; }
+.shelf-head h2 { font-family: var(--display); font-weight: 500; font-size: 22px; text-transform: uppercase; letter-spacing: 0.04em; margin: 0; }
+.shelf-head p { margin: 0; font-size: 14px; color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.doc {
+  display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 22px 22px 18px; text-decoration: none; color: var(--ink); text-align: left;
+  font: inherit; cursor: pointer; transition: border-color .15s, transform .15s;
+}
+.doc:hover { border-color: var(--red); transform: translateY(-2px); }
+.doc .kind { align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); background: var(--red-soft); padding: 3px 9px; border-radius: 4px; }
+.doc h3 { font-family: var(--display); font-weight: 600; font-size: 26px; line-height: 1.1; text-transform: uppercase; margin: 0; text-wrap: balance; }
+.doc .desc { margin: 0; color: var(--muted); font-size: 15px; flex: 1; }
+.doc .foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--line); padding-top: 12px; font-size: 13px; }
+.doc .meta { color: var(--muted); font-variant-numeric: tabular-nums; }
+.doc .go { font-weight: 700; color: var(--red); white-space: nowrap; }
+.note { font-size: 14px; color: var(--muted); background: var(--surface-2); border-radius: 8px; padding: 12px 16px; margin: 0; }
+
+
+/* ---------- Scenario lab ---------- */
+.lab { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 24px 64px; display: flex; flex-direction: column; gap: 24px; }
+.lab-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.lab-bar .title { font-family: var(--display); font-weight: 600; font-size: 22px; text-transform: uppercase; flex: 1; min-width: 0; }
+.lab h2 { font-family: var(--display); font-weight: 600; font-size: clamp(28px, 5vw, 44px); line-height: 1.05; text-transform: uppercase; margin: 0; text-wrap: balance; }
+.lab .intro { color: var(--muted); margin: 0; max-width: 70ch; }
+.sc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.sc-tile { display: flex; gap: 14px; align-items: baseline; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; cursor: pointer; transition: border-color .15s, transform .15s; }
+.sc-tile:hover { border-color: var(--red); transform: translateY(-2px); }
+.sc-tile .num { font-family: var(--display); font-weight: 600; font-size: 28px; color: var(--red); min-width: 1.6em; }
+.sc-tile .name { font-weight: 600; display: block; }
+.sc-tile .k { font-size: 13px; color: var(--muted); }
+.sc-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.sc-col { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; }
+.sc-col p { margin: 0; }
+.sc-col b { color: var(--red); }
+.sc-col .emt { color: #1F4E9C; font-weight: 700; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sc-col .emt { color: #8DB4F5; } }
+:root[data-theme="dark"] .sc-col .emt { color: #8DB4F5; }
+.sc-debrief { background: var(--surface-2); border-radius: 10px; padding: 14px 18px; margin: 0; }
+.sc-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.lab .btn { font: inherit; font-size: 14px; font-weight: 600; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.lab .btn:hover { border-color: var(--red); }
+
+/* ---------- Reader ---------- */
+.reader { display: flex; flex-direction: column; min-height: 100vh; }
+[hidden] { display: none !important; }
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: var(--surface); border-bottom: 1px solid var(--line); padding: 10px 16px;
+}
+.bar .title { flex: 1; min-width: 0; font-family: var(--display); font-weight: 600; font-size: 20px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.btn {
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--surface-2);
+  border: 1px solid var(--line); border-radius: 6px; padding: 7px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+}
+.btn:hover { border-color: var(--red); }
+.btn.primary { background: var(--red); color: var(--on-red); border-color: var(--red); }
+.pager { display: flex; align-items: center; gap: 6px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.pager input { width: 4.2em; font: inherit; padding: 6px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); text-align: right; }
+.zoom { display: flex; gap: 4px; }
+.body { flex: 1; display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: 0; }
+.rail { border-right: 1px solid var(--line); background: var(--surface); display: flex; flex-direction: column; min-width: 0; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 58px); height: calc(100vh - 58px); }
+.rail label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 14px 16px 6px; }
+.rail input { margin: 0 16px 10px; font: inherit; font-size: 14px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.skills { list-style: none; margin: 0; padding: 0 8px 16px; overflow-y: auto; flex: 1; }
+.skills button { width: 100%; text-align: left; font: inherit; background: none; border: 0; border-radius: 6px; padding: 7px 8px; cursor: pointer; color: var(--ink); display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; }
+.skills button:hover, .skills button.on { background: var(--red-soft); }
+.skills .code { font-size: 12px; font-weight: 700; color: var(--red); letter-spacing: 0.03em; }
+.skills .name { grid-column: 1 / -1; font-size: 14px; line-height: 1.3; }
+.skills .pg { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; grid-row: 1; grid-column: 2; }
+.skills .empty { padding: 8px; color: var(--muted); font-size: 14px; }
+.pages { background: var(--reader); padding: 20px 16px 48px; display: flex; flex-direction: column; align-items: center; gap: 16px; min-width: 0; }
+.page { background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,.25); width: 100%; position: relative; max-width: 100%; }
+.page canvas { display: block; width: 100%; height: auto; }
+.page .num { position: absolute; right: 8px; bottom: 6px; font-size: 12px; color: #6B7178; font-variant-numeric: tabular-nums; }
+.status { color: var(--muted); padding: 32px 16px; text-align: center; max-width: 52ch; }
+.mobile-jump { display: none; }
+@media (max-width: 760px) {
+  .body { grid-template-columns: minmax(0, 1fr); }
+  .rail { display: none; }
+  .mobile-jump { display: block; width: 100%; font: inherit; font-size: 14px; padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+  .bar .title { font-size: 17px; flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .doc { transition: none; } .doc:hover { transform: none; } }
+</style>
+</head>
+<body>
+
+<main id="library" class="library">
+  <header class="masthead">
+    <img src="patch.png" alt="Greenwood-Slidell Fire Department patch" width="290" height="362">
+    <div class="text">
+      <span class="eyebrow">Greenwood-Slidell Volunteer Fire Department</span>
+      <h1>Firefighter &amp; EMS Training Library</h1>
+      <p class="lede">Everything for Firefighter I and II and first responder EMS in one place: the taskbook, the instructor guides, the lecture slides, the SFFMA skill sheets and the Wise County protocols.</p>
+    </div>
+  </header>
+
+  <section class="shelf" aria-labelledby="shelf-docs">
+    <div class="shelf-head"><h2 id="shelf-docs">GSVFD documents</h2><p>NFPA 1010 (2024) Chapters 6 and 7</p></div>
+    <div class="grid">
+      <button class="doc" type="button" data-open="taskbook">
+        <span class="kind">Document</span>
+        <h3>Firefighter Taskbook</h3>
+        <p class="desc">K, D and P sign-offs for every Firefighter I and II task and the EMS tasks, the live-fire log, and the SFFMA crosswalk.</p>
+        <div class="foot"><span class="meta">23 pages · Phases 0–2 and E</span><span class="go">View</span></div>
+      </button>
+      <button class="doc" type="button" data-open="guide">
+        <span class="kind">Document</span>
+        <h3>FF I &amp; II Instructor Guide</h3>
+        <p class="desc">Lesson plans for all 24 modules: objectives, materials, lecture outline, drill stations and evaluation.</p>
+        <div class="foot"><span class="meta">29 pages · 24 modules</span><span class="go">View</span></div>
+      </button>
+    </div>
+  </section>
+
+  <section class="shelf" aria-labelledby="shelf-slides">
+    <div class="shelf-head"><h2 id="shelf-slides">Lecture slides</h2><p>FF I and FF II lectures</p></div>
+    <div class="grid">
+      <button class="doc" type="button" data-open="ff1slides">
+        <span class="kind">Slides</span>
+        <h3>Firefighter I Lectures</h3>
+        <p class="desc">Orientation through equipment maintenance, one opener and key-points slide per module.</p>
+        <div class="foot"><span class="meta">Modules 1–17 · 41 slides</span><span class="go">View</span></div>
+      </button>
+      <button class="doc" type="button" data-open="ff2slides">
+        <span class="kind">Slides</span>
+        <h3>Firefighter II Lectures</h3>
+        <p class="desc">Incident command, foam and gas cylinders, thermal imaging, extrication and prevention.</p>
+        <div class="foot"><span class="meta">Modules 18–24 · 19 slides</span><span class="go">View</span></div>
+      </button>
+    </div>
+  </section>
+
+  <section class="shelf" aria-labelledby="shelf-ems">
+    <div class="shelf-head"><h2 id="shelf-ems">First responder EMS</h2><p>Wise County First Responder protocols</p></div>
+    <div class="grid">
+      <button class="doc" type="button" data-open="emsguide">
+        <span class="kind">Document</span>
+        <h3>EMS Instructor Guide</h3>
+        <p class="desc">Modules E1–E8 keyed to the county protocols, 12 local scenarios and the scenario evaluation sheet.</p>
+        <div class="foot"><span class="meta">24 pages · 8 modules · 12 scenarios</span><span class="go">View</span></div>
+      </button>
+      <button class="doc" type="button" data-open="emsslides">
+        <span class="kind">Slides</span>
+        <h3>First Responder EMS Lectures</h3>
+        <p class="desc">Assessment, airway and AED, medical, environmental, trauma, burns and childbirth, plus the scenario lab.</p>
+        <div class="foot"><span class="meta">Modules E1–E8 · 12 scenario cards · 35 slides</span><span class="go">View</span></div>
+      </button>
+      <button class="doc" type="button" data-open="scenarios">
+        <span class="kind">Scenarios</span>
+        <h3>EMS Scenario Lab</h3>
+        <p class="desc">All 12 scenarios as clickable operator cards: dispatch, findings, vitals, expected actions, progression and debrief.</p>
+        <div class="foot"><span class="meta">12 scenarios · Taskbook E.26</span><span class="go">Open</span></div>
+      </button>
+      <button class="doc" type="button" data-open="protocols">
+        <span class="kind">Protocols</span>
+        <h3>Wise County First Responder Protocols</h3>
+        <p class="desc">General orders, refusals, air evacuation, the 25 treatment protocols, GCS, Rule of Nines and APGAR.</p>
+        <div class="foot"><span class="meta">36 pages · 25 protocols</span><span class="go">View</span></div>
+      </button>
+    </div>
+  </section>
+
+  <section class="shelf" aria-labelledby="shelf-sffma">
+    <div class="shelf-head"><h2 id="shelf-sffma">SFFMA instructional skills</h2><p>NFPA 1001 (2019) skill sheets</p></div>
+    <div class="grid">
+      <button class="doc" type="button" data-open="suppression">
+        <span class="kind">Skill sheets</span>
+        <h3>Suppression Skills (FF I &amp; II)</h3>
+        <p class="desc">SFFMA's 2021 suppression packet: every skill with its steps, then the trainee check sheet.</p>
+        <div class="foot"><span class="meta">245 pages · 108 skills</span><span class="go">View</span></div>
+      </button>
+      <button class="doc" type="button" data-open="ff2">
+        <span class="kind">Skill sheets</span>
+        <h3>Firefighter II Skills</h3>
+        <p class="desc">SFFMA's Firefighter II instructional skills, from fire safety education to rescue support.</p>
+        <div class="foot"><span class="meta">33 pages · 16 skills</span><span class="go">View</span></div>
+      </button>
+    </div>
+  </section>
+
+  <p class="note">Everything opens right here, on any phone or computer, with no sign-in. Each document has a menu to jump to a section, skill or slide.</p>
+</main>
+
+
+<div id="lab" class="lab" hidden>
+  <div class="lab-bar">
+    <button class="btn" type="button" id="labback">← Library</button>
+    <span class="title">EMS Scenario Lab</span>
+  </div>
+  <div id="labbody"></div>
+</div>
+
+<div id="reader" class="reader" hidden>
+  <div class="bar">
+    <button class="btn" type="button" id="back">← Library</button>
+    <span class="title" id="rtitle"></span>
+    <div class="pager">
+      <label for="pgnum">Page</label>
+      <input id="pgnum" type="number" min="1" inputmode="numeric">
+      <span id="pgtotal"></span>
+    </div>
+    <div class="zoom" role="group" aria-label="Zoom">
+      <button class="btn" type="button" id="zoomout" aria-label="Zoom out">−</button>
+      <button class="btn" type="button" id="zoomfit">Fit</button>
+      <button class="btn" type="button" id="zoomin" aria-label="Zoom in">+</button>
+    </div>
+    <select id="mjump" class="mobile-jump" aria-label="Jump to skill"></select>
+  </div>
+  <div class="body">
+    <aside class="rail">
+      <label for="filter" id="filterlabel">Skills</label>
+      <input id="filter" type="search" placeholder="Search skills, e.g. ladder">
+      <ul class="skills" id="skills"></ul>
+    </aside>
+    <div class="pages" id="pages"><p class="status">Loading…</p></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script>
+(function () {
+  var PACKETS = {
+    taskbook: { title: 'GSVFD Firefighter Taskbook', pdf: 'gsvfd-taskbook.pdf', index: 'gsvfd-taskbook.json', noun: 'sections' },
+    guide: { title: 'GSVFD FF I & II Instructor Guide', pdf: 'gsvfd-instructor-guide.pdf', index: 'gsvfd-instructor-guide.json', noun: 'sections' },
+    suppression: { title: 'SFFMA Suppression Skills (FF I & II)', pdf: 'sffma-ff1-instructional.pdf', index: 'sffma-ff1-instructional.json' },
+    ff2: { title: 'SFFMA Firefighter II Skills', pdf: 'sffma-ff2-instructional.pdf', index: 'sffma-ff2-instructional.json' },
+    ff1slides: { title: 'Firefighter I Lecture Slides', pdf: 'gsvfd-ff1-slides.pdf', index: 'gsvfd-ff1-slides.json', noun: 'sections' },
+    ff2slides: { title: 'Firefighter II Lecture Slides', pdf: 'gsvfd-ff2-slides.pdf', index: 'gsvfd-ff2-slides.json', noun: 'sections' },
+    emsslides: { title: 'First Responder EMS Lecture Slides', pdf: 'gsvfd-ems-slides.pdf', index: 'gsvfd-ems-slides.json', noun: 'sections' },
+    emsguide: { title: 'GSVFD EMS Instructor Guide', pdf: 'gsvfd-ems-guide.pdf', index: 'gsvfd-ems-guide.json', noun: 'sections' },
+    protocols: { title: 'Wise County First Responder Protocols', pdf: 'wise-fr-protocols.pdf', index: 'wise-fr-protocols.json', noun: 'sections' }
+  };
+  var lib = document.getElementById('library');
+  var reader = document.getElementById('reader');
+  var pagesEl = document.getElementById('pages');
+  var skillsEl = document.getElementById('skills');
+  var filterEl = document.getElementById('filter');
+  var mjump = document.getElementById('mjump');
+  var pgnum = document.getElementById('pgnum');
+  var pgtotal = document.getElementById('pgtotal');
+  var state = { key: null, pdf: null, zoom: 1, pages: [], skills: [], token: 0, observer: null, current: 1 };
+
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  function show(key) {
+    var labEl = document.getElementById('lab');
+    if (key === 'scenarios' || /^scenario-\d+$/.test(key)) {
+      reader.hidden = true; lib.hidden = true; teardown(); labEl.hidden = false; renderLab(key); window.scrollTo(0, 0); return;
+    }
+    labEl.hidden = true;
+    if (!PACKETS[key]) { reader.hidden = true; lib.hidden = false; teardown(); return; }
+    lib.hidden = true; reader.hidden = false; window.scrollTo(0, 0);
+    if (state.key !== key) open(key);
+  }
+
+  var SCEN = [{"n": 1, "t": "Chest pain at the feed store", "kind": "Medical", "items": [["Dispatch", "62-year-old man with chest pain, feed store on the highway."], ["On arrival", "Man sitting on a pallet, pale and sweating, rubbing his chest. He was loading feed 20 minutes ago."], ["Findings", "Pressure, 7/10, spreading to the left arm. History of high blood pressure; takes lisinopril; has a nitroglycerin prescription he has never used. No allergies. GCS 15."], ["Vitals", "BP 152/94, pulse 104, respirations 22, SpO2 95%, skin pale, cool and sweaty."], ["Expected actions (7)", "scene safety and gloves; loosen clothing, position of comfort, keep him calm and still; NRB 12–15 L/min; OPQRST and SAMPLE; vitals every 3–5 min; AED staged nearby. EMT-B and above: 2 chewable 81 mg aspirin after checking for allergy; assist his nitroglycerin if systolic BP is 100 or higher, up to 3 doses, after checking the expiration date and asking about erectile dysfunction drugs."], ["Progression", "After the second nitroglycerin his BP is 96/60. The team stops nitroglycerin and moves to cardiogenic shock care (23): semi-Fowler's, legs up because he is hypotensive, blankets, vitals every 5 min."], ["Debrief", "Why every chest pain is treated as a heart attack; the systolic BP cutoff; what goes in the handoff."]]}, {"n": 2, "t": "Collapse at the fellowship hall", "kind": "Medical", "items": [["Dispatch", "70-year-old woman collapsed, CPR in progress, church fellowship hall."], ["On arrival", "A bystander is doing compressions. A wall-mounted AED is unopened."], ["Findings", "Unresponsive, not breathing, no pulse."], ["Expected actions (10)", "confirm arrest; take over CPR without a long pause; attach the AED; stop CPR and press Analyze; shock when advised with everyone clear; resume CPR right away; BVM with oxygen; rotate compressors every 2 minutes."], ["Progression", "First analysis: shock advised. After the second analysis: no shock advised, pulse present, breathing 6 per minute. The team checks the pulse, keeps ventilating with the BVM, and monitors ABCs."], ["Debrief", "Compression pauses, roles, the times and number of shocks for the handoff, and thanking and checking on the bystander."]]}, {"n": 3, "t": "Bee stings in the hay field", "kind": "Medical", "items": [["Dispatch", "34-year-old man stung by bees, having trouble breathing."], ["On arrival", "Man sitting on a tailgate; hives on arms and neck, lips swelling, hoarse voice, wheezing. He has a prescribed epinephrine auto-injector in the truck."], ["Vitals", "BP 86/52, pulse 122, respirations 28 and wheezy, SpO2 89%."], ["Expected actions (1, 19, 23)", "keep bees away from the crew; open and maintain airway; NRB 12–15 L/min, BVM if breathing fails; treat for shock; remove rings and watch (hands are swelling); keep him still; vitals every 3–5 min. EMT-B and above: confirm it is his auto-injector and not expired, then assist with it into the outer thigh."], ["Progression", "Five minutes after epinephrine: wheezing better, BP 104/70. If the team doesn't give or assist with epinephrine, his voice gets hoarser and SpO2 falls to 84%."], ["Debrief", "Signs that make it anaphylaxis; the five rights of medication assists; why he still goes to the hospital."]]}, {"n": 4, "t": "Confused at the kitchen table", "kind": "Medical", "items": [["Dispatch", "55-year-old woman acting confused, history of diabetes."], ["On arrival", "Her husband says she took her insulin and skipped lunch. She is sweaty and slow to answer but follows commands and swallows on request."], ["Vitals", "BP 132/84, pulse 110, respirations 18, SpO2 97%, skin cool and sweaty. GCS 14 (confused)."], ["Expected actions (12)", "confirm she is alert enough, has a gag reflex and can drink unaided; orange juice with 2–3 tablespoons of sugar, or oral glucose (EMT-B and above); vitals every 5–10 min."], ["Progression (operator's choice)", "She becomes unresponsive before drinking. The team stops anything by mouth, contacts EMS, suctions, places her in the recovery position and gives NRB 10–12 L/min."], ["Debrief", "When oral sugar is safe and when it is not."]]}, {"n": 5, "t": "Slurred speech at breakfast", "kind": "Medical", "items": [["Dispatch", "78-year-old man, wife says he is talking funny."], ["On arrival", "Right facial droop, right arm drifts down, speech slurred. His wife says he was normal at 0700; it is now 0740."], ["Vitals", "BP 188/102, pulse 88 and irregular, respirations 18, SpO2 96%. GCS 14."], ["Expected actions (11)", "airway, suction ready; NRB 12–15 L/min; neuro exam; semi-Fowler's; calm and reassure; vitals every 3–5 min; report the time he was last known well."], ["Progression", "He vomits and becomes harder to rouse. The team suctions, places him lateral recumbent, and is ready to ventilate with the BVM."], ["Debrief", "Why the last-known-well time matters for the hospital."]]}, {"n": 6, "t": "Hay crew collapse in July", "kind": "Medical", "items": [["Dispatch", "19-year-old man passed out in a hay field, 101°F."], ["On arrival", "Crew moved him to the shade of a trailer. He is confused, skin hot and dry."], ["Vitals", "BP 98/60, pulse 136, respirations 28, SpO2 96%. GCS 13."], ["Expected actions (17)", "contact EMS; move him to a cool place (an air-conditioned cab); remove heavy clothing; ice packs to head, neck, armpits and groin, or a wet sheet with airflow; stop cooling if he shivers; NRB 10–12 L/min; vitals every 5 min."], ["Progression", "He has a 1-minute seizure. The team protects him, puts nothing in his mouth, then positions and suctions (21)."], ["Debrief", "Heat exhaustion versus heat stroke; why cooling starts before transport."]]}, {"n": 7, "t": "Motorcycle versus deer", "kind": "Trauma", "items": [["Dispatch", "Motorcycle crash, one rider down, farm-to-market road at night."], ["On arrival", "Traffic is moving past. A 28-year-old man lies in the ditch, helmet on, talking. Bright red blood is spurting from a gash on his lower right leg. He says his neck hurts and his hands tingle."], ["Vitals", "BP 104/68, pulse 118, respirations 24, SpO2 94%. GCS 14."], ["Expected actions (3, 16, 18, 23)", "block the lane and set up a protected work area (taskbook 1.16); manual spinal stabilization; airway by modified jaw thrust if needed; direct pressure, then a BP cuff or tourniquet above the wound when bleeding continues; treat for shock; neuro exam before and after immobilization; long spine board; vitals every 5 min."], ["Progression", "BP falls to 86/50 if bleeding control is slow."], ["Debrief", "Order of priorities in multiple trauma; whether tingling hands make this an air evacuation candidate (protocol V); traffic safety."]]}, {"n": 8, "t": "Chainsaw on the fence line", "kind": "Trauma", "items": [["Dispatch", "Man cut his hand with a chainsaw, ranch off a county road."], ["On arrival", "45-year-old man holding a towel on his left hand; his index and middle fingers are cut off at the middle knuckle and lying in the grass."], ["Vitals", "BP 128/80, pulse 108, respirations 20, SpO2 98%."], ["Expected actions (2, 3, 23)", "shut down the saw; control bleeding; treat for shock; find both fingers; rinse briefly with saline, wrap in moist gauze, seal in a plastic bag, put the bag in a cool container (not directly on ice), and send them with him."], ["Progression", "The team asks EMS about air evacuation; amputations that may be reattached are on the criteria list."], ["Debrief", "Why the part is never put directly on ice; reattachment time window."]]}, {"n": 9, "t": "Baby won't wait", "kind": "Childbirth", "items": [["Dispatch", "24-year-old woman in labor, EMS 25 minutes out."], ["On arrival", "Second pregnancy, 39 weeks, water broke 30 minutes ago, contractions 2 minutes apart, feels the urge to push. The baby's head is crowning."], ["Vitals (mother)", "BP 124/78, pulse 96, respirations 20."], ["Expected actions (8)", "history; open the OB kit; gentle pressure on the head; suction mouth then nose; deliver the shoulders; keep the baby level until clamped; clamps at 7–10 inches and 2–3 inches beyond, cut between; dry, warm and place on the mother; APGAR at 1 and 5 minutes; uterine massage; deliver the placenta without pulling the cord."], ["Progression (operator's choice)", "The cord is around the baby's neck; the team slips it over the head. One-minute findings: active movement, pulse 140, cries when suctioned, body pink with blue hands and feet, vigorous cry (APGAR 9)."], ["Debrief", "Keeping the newborn warm; when to reassess mother and baby."]]}, {"n": 10, "t": "Rattlesnake in the barn", "kind": "Trauma", "items": [["Dispatch", "9-year-old girl bitten by a snake."], ["On arrival", "The snake is under a pallet in the barn. Her mother carried her to the porch. Two puncture wounds on the left ankle; swelling spreading up the calf; she is crying and scared."], ["Vitals", "pulse 120, respirations 26, BP 100/64."], ["Expected actions (24)", "stay away from the snake; keep her still and calm; remove her shoe, sock and ankle bracelet; keep the leg at or below heart level; immobilize; no tourniquet, no ice; vitals every 5 min; watch for anaphylaxis; a photo of the snake only if it can be taken safely."], ["Debrief", "Children's normal vitals; talking to a scared child and parent."]]}, {"n": 11, "t": "Rollover, \"I'm fine\"", "kind": "Refusal", "items": [["Dispatch", "Single-vehicle rollover into a bar ditch, one occupant."], ["On arrival", "A 40-year-old man is out of the pickup and walking around. Small scrape on his forehead. He wants to go home."], ["Findings", "Alert and oriented to person, place, time and events. GCS 15. No alcohol odor. Vitals normal."], ["Expected actions (II, IV)", "full assessment despite the refusal; explain the risks given the mechanism; confirm he is an adult who is conscious and fully oriented; complete the First Responder refusal form; cancel the responding unit per protocol IV; document."], ["Variant (operator's choice)", "He asks the same question three times and can't say what happened. He is not fully oriented, so EMS is not cancelled; the team keeps him calm and asks law enforcement to stay."], ["Debrief", "What makes a refusal valid; protecting the patient and the department with good documentation."]]}, {"n": 12, "t": "Brush pile flash burn", "kind": "Burns", "items": [["Dispatch", "Man burned while burning brush."], ["On arrival", "A 67-year-old man used diesel on a brush pile; it flashed. The pile is still burning near a fence. His forearms and hands are red and blistered, his eyebrows and beard are singed, and his voice is hoarse."], ["Vitals", "BP 146/90, pulse 112, respirations 24, SpO2 95%."], ["Expected actions (5)", "make the fire scene safe; stop the burning process; NRB 12–15 L/min; remove his watch and rings now; classify (2nd degree, both forearms and hands, about 9% BSA by the Rule of Nines, plus the face); dry sterile dressings; keep him warm; vitals every 3–5 min."], ["Severity", "Critical, because the hands and face are burned and the hoarse voice suggests an airway burn. Report degree, percentage and severity to EMS."], ["Debrief", "Airway burn warning signs; why level of care for major burns is an air evacuation criterion."]]}];
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function fmt(t) { return esc(t).replace('EMT-B and above:', '<span class="emt">EMT-B and above:</span>'); }
+  var LEFT = ['Dispatch', 'On arrival', 'Findings', 'Vitals', 'Vitals (mother)'];
+  function renderLab(key) {
+    var body = document.getElementById('labbody');
+    var m = key.match(/^scenario-(\d+)$/);
+    var sc = m ? SCEN.filter(function (x) { return x.n === +m[1]; })[0] : null;
+    if (!sc) {
+      body.innerHTML = '<h2>Twelve calls from our district</h2><p class="intro">Pick a scenario to open its operator card. Read the dispatch aloud, then give findings and vitals only when the team checks for them. Pass as team lead: every critical item, 8 of 10 performance items, and a clean handoff. Taskbook E.26 signs after three passes: one medical, one trauma, one of the trainee\'s choice.</p>' +
+        '<div class="sc-grid">' + SCEN.map(function (x) {
+          return '<button class="sc-tile" type="button" data-sc="' + x.n + '"><span class="num">' + x.n + '</span><span><span class="name">' + esc(x.t) + '</span><span class="k">' + esc(x.kind) + '</span></span></button>';
+        }).join('') + '</div>';
+      body.querySelectorAll('[data-sc]').forEach(function (b) { b.addEventListener('click', function () { location.hash = 'scenario-' + b.getAttribute('data-sc'); }); });
+      return;
+    }
+    var left = sc.items.filter(function (i) { return LEFT.indexOf(i[0]) > -1; });
+    var right = sc.items.filter(function (i) { return LEFT.indexOf(i[0]) < 0 && i[0] !== 'Debrief'; });
+    var deb = sc.items.filter(function (i) { return i[0] === 'Debrief'; })[0];
+    function col(list) { return '<div class="sc-col">' + list.map(function (i) { return '<p><b>' + esc(i[0]) + '.</b> ' + fmt(i[1]) + '</p>'; }).join('') + '</div>'; }
+    var prev = sc.n > 1 ? '<button class="btn" type="button" data-go="scenario-' + (sc.n - 1) + '">← Scenario ' + (sc.n - 1) + '</button>' : '<span></span>';
+    var next = sc.n < SCEN.length ? '<button class="btn" type="button" data-go="scenario-' + (sc.n + 1) + '">Scenario ' + (sc.n + 1) + ' →</button>' : '<span></span>';
+    body.innerHTML = '<div style="display:flex;flex-direction:column;gap:16px">' +
+      '<span class="eyebrow">Scenario ' + sc.n + ' of 12 · ' + esc(sc.kind) + '</span><h2>' + esc(sc.t) + '</h2>' +
+      '<div class="sc-card">' + col(left) + col(right) + '</div>' +
+      (deb ? '<p class="sc-debrief"><strong>Debrief:</strong> ' + fmt(deb[1]) + '</p>' : '') +
+      '<div class="sc-nav">' + prev + '<button class="btn" type="button" data-go="scenarios">All scenarios</button>' + next + '</div></div>';
+    body.querySelectorAll('[data-go]').forEach(function (b) { b.addEventListener('click', function () { location.hash = b.getAttribute('data-go'); }); });
+  }
+  document.getElementById('labback').addEventListener('click', function () { location.hash = ''; });
+  function route() { show(location.hash.replace('#', '')); }
+
+  document.querySelectorAll('[data-open]').forEach(function (b) {
+    b.addEventListener('click', function () { location.hash = b.getAttribute('data-open'); });
+  });
+  document.getElementById('back').addEventListener('click', function () { location.hash = ''; });
+  window.addEventListener('hashchange', route);
+
+  function teardown() {
+    state.token++;
+    if (state.observer) state.observer.disconnect();
+    state.key = null; state.pdf = null; state.pages = [];
+  }
+
+  function open(key) {
+    teardown();
+    var p = PACKETS[key]; var token = state.token;
+    state.key = key; state.zoom = 1; state.current = 1;
+    document.getElementById('rtitle').textContent = p.title;
+    var noun = p.noun || 'skills';
+    document.getElementById('filterlabel').textContent = noun === 'skills' ? 'Skills' : 'Sections';
+    filterEl.placeholder = noun === 'skills' ? 'Search skills, e.g. ladder' : (state.key === 'protocols' || state.key === 'emsguide' ? 'Search, e.g. burns' : 'Search sections, e.g. SCBA');
+    state.noun = noun;
+    pagesEl.innerHTML = '<p class="status">Loading…</p>';
+    skillsEl.innerHTML = ''; mjump.innerHTML = ''; filterEl.value = '';
+    fetch(p.index).then(function (r) { return r.json(); }).then(function (list) {
+      if (token !== state.token) return;
+      state.skills = list; renderSkills('');
+    }).catch(function () { skillsEl.innerHTML = '<li class="empty">The list is unavailable. Use the page box to move around.</li>'; });
+    if (!window.pdfjsLib) { fail(p); return; }
+    pdfjsLib.getDocument({ url: p.pdf, isEvalSupported: false, disableFontFace: false }).promise.then(function (pdf) {
+      if (token !== state.token) return;
+      state.pdf = pdf; buildPages(pdf, token);
+    }).catch(function () { if (token === state.token) fail(p); });
+  }
+
+  function fail(p) {
+    pagesEl.innerHTML = '<p class="status">This document could not be displayed in this browser. <a href="' + p.pdf + '" target="_blank" rel="noopener">Open the PDF in a new tab</a>.</p>';
+  }
+
+  function buildPages(pdf, token) {
+    pgtotal.textContent = 'of ' + pdf.numPages; pgnum.max = pdf.numPages; pgnum.value = 1;
+    pdf.getPage(1).then(function (first) {
+      if (token !== state.token) return;
+      var vp = first.getViewport({ scale: 1 });
+      var ratio = vp.height / vp.width;
+      pagesEl.innerHTML = '';
+      for (var i = 1; i <= pdf.numPages; i++) {
+        var d = document.createElement('div');
+        d.className = 'page'; d.id = 'pg-' + i; d.dataset.n = i;
+        d.style.aspectRatio = (1 / ratio).toFixed(4);
+        d.innerHTML = '<span class="num">' + i + '</span>';
+        pagesEl.appendChild(d); state.pages.push(d);
+      }
+      applyZoom();
+      state.observer = new IntersectionObserver(onSee, { root: null, rootMargin: '800px 0px', threshold: [0, 0.5] });
+      state.pages.forEach(function (d) { state.observer.observe(d); });
+    });
+  }
+
+  function onSee(entries) {
+    entries.forEach(function (e) {
+      var d = e.target;
+      if (e.isIntersecting) render(d);
+      if (e.intersectionRatio >= 0.5) setCurrent(+d.dataset.n);
+    });
+  }
+
+  function setCurrent(n) {
+    state.current = n;
+    if (document.activeElement !== pgnum) pgnum.value = n;
+    var best = null;
+    state.skills.forEach(function (s) { if (s[2] <= n) best = s[2]; });
+    skillsEl.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', +b.dataset.p === best); });
+  }
+
+  function render(d) {
+    var w = Math.round(d.clientWidth);
+    if (!state.pdf || !w || d.dataset.w == w) return;
+    d.dataset.w = w;
+    var token = state.token;
+    state.pdf.getPage(+d.dataset.n).then(function (page) {
+      if (token !== state.token) return;
+      var base = page.getViewport({ scale: 1 });
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var vp = page.getViewport({ scale: (w / base.width) * dpr });
+      var c = document.createElement('canvas');
+      c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+      c.setAttribute('aria-label', 'Page ' + d.dataset.n);
+      return page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise.then(function () {
+        if (token !== state.token) return;
+        var old = d.querySelector('canvas'); if (old) old.remove();
+        d.insertBefore(c, d.firstChild);
+      });
+    }).catch(function () { d.dataset.w = ''; });
+  }
+
+  function applyZoom() {
+    var width = Math.round(Math.min(pagesEl.clientWidth - 32, 900) * state.zoom);
+    state.pages.forEach(function (d) { d.style.width = width + 'px'; d.dataset.w = ''; });
+    state.pages.forEach(function (d) {
+      var r = d.getBoundingClientRect();
+      if (r.bottom > -800 && r.top < window.innerHeight + 800) render(d);
+    });
+  }
+  function zoomTo(z) {
+    var n = state.current; state.zoom = Math.max(0.6, Math.min(2.4, z)); applyZoom(); go(n, true);
+  }
+  document.getElementById('zoomin').addEventListener('click', function () { zoomTo(state.zoom + 0.2); });
+  document.getElementById('zoomout').addEventListener('click', function () { zoomTo(state.zoom - 0.2); });
+  document.getElementById('zoomfit').addEventListener('click', function () { zoomTo(1); });
+  window.addEventListener('resize', function () { if (state.pdf) applyZoom(); });
+
+  function go(n, instant) {
+    var d = document.getElementById('pg-' + n); if (!d) return;
+    var top = d.getBoundingClientRect().top + window.scrollY - document.querySelector('.bar').offsetHeight - 12;
+    window.scrollTo({ top: top, behavior: instant ? 'auto' : 'smooth' });
+    setCurrent(n);
+  }
+  pgnum.addEventListener('change', function () {
+    var n = Math.max(1, Math.min(+pgnum.value || 1, state.pdf ? state.pdf.numPages : 1)); pgnum.value = n; go(n);
+  });
+
+  function renderSkills(q) {
+    q = q.trim().toLowerCase();
+    var list = state.skills.filter(function (s) { return !q || (s[0] + ' ' + s[1]).toLowerCase().indexOf(q) >= 0; });
+    skillsEl.innerHTML = '';
+    if (!list.length) { skillsEl.innerHTML = '<li class="empty">Nothing matches "' + q.replace(/[<>&"]/g, '') + '".</li>'; }
+    list.forEach(function (s) {
+      var li = document.createElement('li');
+      var b = document.createElement('button'); b.type = 'button'; b.dataset.p = s[2];
+      b.innerHTML = '<span class="code"></span><span class="pg"></span><span class="name"></span>';
+      b.querySelector('.code').textContent = s[0];
+      b.querySelector('.pg').textContent = 'p. ' + s[2];
+      b.querySelector('.name').textContent = s[1];
+      b.addEventListener('click', function () { go(s[2]); });
+      li.appendChild(b); skillsEl.appendChild(li);
+    });
+    if (!q) {
+      mjump.innerHTML = '<option value="">Jump to a ' + (state.noun === 'skills' ? 'skill' : 'section') + '…</option>';
+      state.skills.forEach(function (s) {
+        var o = document.createElement('option'); o.value = s[2]; o.textContent = s[0] + ' — ' + s[1]; mjump.appendChild(o);
+      });
+    }
+  }
+  filterEl.addEventListener('input', function () { renderSkills(filterEl.value); });
+  mjump.addEventListener('change', function () { if (mjump.value) go(+mjump.value); });
+
+  route();
+})();
+</script>
+</body>
+</html>

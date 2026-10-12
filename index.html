@@ -92,6 +92,41 @@ h1 { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 6vw, 
 .lab .btn { font: inherit; font-size: 14px; font-weight: 600; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
 .lab .btn:hover { border-color: var(--red); }
 
+
+.doc .foot { flex-wrap: wrap; row-gap: 10px; }
+.doc .foot .meta { flex-basis: 100%; }
+.dl { display: flex; gap: 8px; margin-right: auto; }
+.dl a { font-weight: 700; font-size: 13px; text-decoration: none; color: var(--ink); border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 4px 10px; white-space: nowrap; }
+.dl a:hover { border-color: var(--red); color: var(--red); }
+.rdl { display: flex; gap: 8px; }
+.rdl a { font: inherit; font-size: 14px; font-weight: 600; text-decoration: none; padding: 7px 12px; border-radius: 6px; border: 1px solid var(--red); background: var(--red); color: var(--on-red); white-space: nowrap; }
+.rdl a:hover { filter: brightness(1.1); }
+
+
+/* ---------- Slideshow ---------- */
+.show { position: fixed; inset: 0; background: #0E0F10; color: #EDEFF2; display: flex; flex-direction: column; z-index: 10; }
+.show-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; flex-wrap: wrap; background: #17181A; border-bottom: 1px solid #2A2D31; }
+.show-bar .title { font-family: var(--display); font-weight: 600; font-size: 18px; text-transform: uppercase; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.show .sbtn { font: inherit; font-size: 14px; font-weight: 600; color: #EDEFF2; background: #26292D; border: 1px solid #3A3E44; border-radius: 6px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
+.show .sbtn:hover { border-color: #E5484F; }
+.show .sbtn[aria-pressed="true"] { background: #E5484F; border-color: #E5484F; color: #1A0B0C; }
+.show select { font: inherit; font-size: 14px; max-width: 260px; background: #26292D; color: #EDEFF2; border: 1px solid #3A3E44; border-radius: 6px; padding: 6px 8px; }
+.stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 12px; }
+.stage img { max-width: 100%; max-height: 100%; aspect-ratio: 16 / 9; object-fit: contain; box-shadow: 0 8px 40px rgba(0,0,0,.5); border-radius: 4px; background: #1B1C1E; cursor: pointer; user-select: none; }
+.stage .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 72px; border: 0; border-radius: 8px; background: rgba(255,255,255,.08); color: #fff; font-size: 28px; cursor: pointer; }
+.stage .nav:hover { background: rgba(229,72,79,.85); }
+.stage .prev { left: 16px; } .stage .next { right: 16px; }
+.show-foot { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 8px 14px 12px; font-size: 14px; color: #A2A8B0; font-variant-numeric: tabular-nums; }
+.notes { max-height: 28vh; overflow: auto; background: #17181A; border-top: 1px solid #2A2D31; padding: 14px 20px; font-size: 16px; line-height: 1.55; color: #D9DCE0; }
+.notes h4 { margin: 0 0 6px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #E5484F; }
+.notes p { margin: 0; max-width: 90ch; }
+.show:fullscreen .show-bar, .show:fullscreen .show-foot { display: none; }
+.show:fullscreen .stage { padding: 0; }
+.show:fullscreen .stage img { box-shadow: none; border-radius: 0; }
+.show:fullscreen .stage .nav { opacity: 0; } .show:fullscreen .stage .nav:hover { opacity: 1; }
+.dl a.present { background: var(--red); border-color: var(--red); color: var(--on-red); }
+@media (max-width: 640px) { .show-foot .hint { display: none; } .stage .nav { display: none; } .show-bar .title { flex-basis: 100%; order: -1; } }
+
 /* ---------- Reader ---------- */
 .reader { display: flex; flex-direction: column; min-height: 100vh; }
 [hidden] { display: none !important; }
@@ -151,88 +186,88 @@ h1 { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 6vw, 
   <section class="shelf" aria-labelledby="shelf-docs">
     <div class="shelf-head"><h2 id="shelf-docs">GSVFD documents</h2><p>NFPA 1010 (2024) Chapters 6 and 7</p></div>
     <div class="grid">
-      <button class="doc" type="button" data-open="taskbook">
+      <div class="doc" role="link" tabindex="0" data-open="taskbook">
         <span class="kind">Document</span>
         <h3>Firefighter Taskbook</h3>
         <p class="desc">K, D and P sign-offs for every Firefighter I and II task and the EMS tasks, the live-fire log, and the SFFMA crosswalk.</p>
-        <div class="foot"><span class="meta">23 pages · Phases 0–2 and E</span><span class="go">View</span></div>
-      </button>
-      <button class="doc" type="button" data-open="guide">
+        <div class="foot"><span class="meta">23 pages · Phases 0–2 and E</span><span class="dl"><a href="gsvfd-taskbook.pdf" download>↓ PDF</a></span><span class="go">View</span></div>
+      </div>
+      <div class="doc" role="link" tabindex="0" data-open="guide">
         <span class="kind">Document</span>
         <h3>FF I &amp; II Instructor Guide</h3>
         <p class="desc">Lesson plans for all 24 modules: objectives, materials, lecture outline, drill stations and evaluation.</p>
-        <div class="foot"><span class="meta">29 pages · 24 modules</span><span class="go">View</span></div>
-      </button>
+        <div class="foot"><span class="meta">29 pages · 24 modules</span><span class="dl"><a href="gsvfd-instructor-guide.pdf" download>↓ PDF</a></span><span class="go">View</span></div>
+      </div>
     </div>
   </section>
 
   <section class="shelf" aria-labelledby="shelf-slides">
     <div class="shelf-head"><h2 id="shelf-slides">Lecture slides</h2><p>FF I and FF II lectures</p></div>
     <div class="grid">
-      <button class="doc" type="button" data-open="ff1slides">
+      <div class="doc" role="link" tabindex="0" data-open="ff1slides">
         <span class="kind">Slides</span>
         <h3>Firefighter I Lectures</h3>
         <p class="desc">Orientation through equipment maintenance, one opener and key-points slide per module.</p>
-        <div class="foot"><span class="meta">Modules 1–17 · 41 slides</span><span class="go">View</span></div>
-      </button>
-      <button class="doc" type="button" data-open="ff2slides">
+        <div class="foot"><span class="meta">Modules 1–17 · 41 slides</span><span class="dl"><a class="present" href="#present-ff1slides">▶ Present</a><a href="gsvfd-ff1-slides.pptx" download>↓ PPTX</a><a href="gsvfd-ff1-slides.pdf" download>↓ PDF</a></span><span class="go">View</span></div>
+      </div>
+      <div class="doc" role="link" tabindex="0" data-open="ff2slides">
         <span class="kind">Slides</span>
         <h3>Firefighter II Lectures</h3>
         <p class="desc">Incident command, foam and gas cylinders, thermal imaging, extrication and prevention.</p>
-        <div class="foot"><span class="meta">Modules 18–24 · 19 slides</span><span class="go">View</span></div>
-      </button>
+        <div class="foot"><span class="meta">Modules 18–24 · 19 slides</span><span class="dl"><a class="present" href="#present-ff2slides">▶ Present</a><a href="gsvfd-ff2-slides.pptx" download>↓ PPTX</a><a href="gsvfd-ff2-slides.pdf" download>↓ PDF</a></span><span class="go">View</span></div>
+      </div>
     </div>
   </section>
 
   <section class="shelf" aria-labelledby="shelf-ems">
     <div class="shelf-head"><h2 id="shelf-ems">First responder EMS</h2><p>Wise County First Responder protocols</p></div>
     <div class="grid">
-      <button class="doc" type="button" data-open="emsguide">
+      <div class="doc" role="link" tabindex="0" data-open="emsguide">
         <span class="kind">Document</span>
         <h3>EMS Instructor Guide</h3>
         <p class="desc">Modules E1–E8 keyed to the county protocols, 12 local scenarios and the scenario evaluation sheet.</p>
-        <div class="foot"><span class="meta">24 pages · 8 modules · 12 scenarios</span><span class="go">View</span></div>
-      </button>
-      <button class="doc" type="button" data-open="emsslides">
+        <div class="foot"><span class="meta">24 pages · 8 modules · 12 scenarios</span><span class="dl"><a href="gsvfd-ems-guide.pdf" download>↓ PDF</a></span><span class="go">View</span></div>
+      </div>
+      <div class="doc" role="link" tabindex="0" data-open="emsslides">
         <span class="kind">Slides</span>
         <h3>First Responder EMS Lectures</h3>
         <p class="desc">Assessment, airway and AED, medical, environmental, trauma, burns and childbirth, plus the scenario lab.</p>
-        <div class="foot"><span class="meta">Modules E1–E8 · 12 scenario cards · 35 slides</span><span class="go">View</span></div>
-      </button>
-      <button class="doc" type="button" data-open="scenarios">
+        <div class="foot"><span class="meta">Modules E1–E8 · 12 scenario cards · 35 slides</span><span class="dl"><a class="present" href="#present-emsslides">▶ Present</a><a href="gsvfd-ems-slides.pptx" download>↓ PPTX</a><a href="gsvfd-ems-slides.pdf" download>↓ PDF</a></span><span class="go">View</span></div>
+      </div>
+      <div class="doc" role="link" tabindex="0" data-open="scenarios">
         <span class="kind">Scenarios</span>
         <h3>EMS Scenario Lab</h3>
         <p class="desc">All 12 scenarios as clickable operator cards: dispatch, findings, vitals, expected actions, progression and debrief.</p>
-        <div class="foot"><span class="meta">12 scenarios · Taskbook E.26</span><span class="go">Open</span></div>
-      </button>
-      <button class="doc" type="button" data-open="protocols">
+        <div class="foot"><span class="meta">12 scenarios · Taskbook E.26</span><span class="dl"><a href="gsvfd-ems-guide.pdf" download>↓ PDF</a></span><span class="go">Open</span></div>
+      </div>
+      <div class="doc" role="link" tabindex="0" data-open="protocols">
         <span class="kind">Protocols</span>
         <h3>Wise County First Responder Protocols</h3>
         <p class="desc">General orders, refusals, air evacuation, the 25 treatment protocols, GCS, Rule of Nines and APGAR.</p>
-        <div class="foot"><span class="meta">36 pages · 25 protocols</span><span class="go">View</span></div>
-      </button>
+        <div class="foot"><span class="meta">36 pages · 25 protocols</span><span class="dl"><a href="wise-fr-protocols.pdf" download>↓ PDF</a></span><span class="go">View</span></div>
+      </div>
     </div>
   </section>
 
   <section class="shelf" aria-labelledby="shelf-sffma">
     <div class="shelf-head"><h2 id="shelf-sffma">SFFMA instructional skills</h2><p>NFPA 1001 (2019) skill sheets</p></div>
     <div class="grid">
-      <button class="doc" type="button" data-open="suppression">
+      <div class="doc" role="link" tabindex="0" data-open="suppression">
         <span class="kind">Skill sheets</span>
         <h3>Suppression Skills (FF I &amp; II)</h3>
         <p class="desc">SFFMA's 2021 suppression packet: every skill with its steps, then the trainee check sheet.</p>
-        <div class="foot"><span class="meta">245 pages · 108 skills</span><span class="go">View</span></div>
-      </button>
-      <button class="doc" type="button" data-open="ff2">
+        <div class="foot"><span class="meta">245 pages · 108 skills</span><span class="dl"><a href="sffma-ff1-instructional.pdf" download>↓ PDF</a></span><span class="go">View</span></div>
+      </div>
+      <div class="doc" role="link" tabindex="0" data-open="ff2">
         <span class="kind">Skill sheets</span>
         <h3>Firefighter II Skills</h3>
         <p class="desc">SFFMA's Firefighter II instructional skills, from fire safety education to rescue support.</p>
-        <div class="foot"><span class="meta">33 pages · 16 skills</span><span class="go">View</span></div>
-      </button>
+        <div class="foot"><span class="meta">33 pages · 16 skills</span><span class="dl"><a href="sffma-ff2-instructional.pdf" download>↓ PDF</a></span><span class="go">View</span></div>
+      </div>
     </div>
   </section>
 
-  <p class="note">Everything opens right here, on any phone or computer, with no sign-in. Each document has a menu to jump to a section, skill or slide.</p>
+  <p class="note">Everything opens right here, on any phone or computer, with no sign-in. Press ▶ Present to run any lecture as a slide show with speaker notes, or use the download buttons to save documents as PDF and lectures as PowerPoint or PDF.</p>
 </main>
 
 
@@ -244,10 +279,28 @@ h1 { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 6vw, 
   <div id="labbody"></div>
 </div>
 
+<div id="show" class="show" hidden>
+  <div class="show-bar">
+    <button class="sbtn" type="button" id="showback">← Library</button>
+    <span class="title" id="showtitle"></span>
+    <select id="showjump" aria-label="Jump to slide"></select>
+    <button class="sbtn" type="button" id="shownotes" aria-pressed="false">Notes</button>
+    <button class="sbtn" type="button" id="showfull">Full screen</button>
+  </div>
+  <div class="stage">
+    <button class="nav prev" type="button" id="showprev" aria-label="Previous slide">‹</button>
+    <img id="showimg" alt="">
+    <button class="nav next" type="button" id="shownext" aria-label="Next slide">›</button>
+  </div>
+  <div class="notes" id="notesbox" hidden><h4>Speaker notes</h4><p id="notestext"></p></div>
+  <div class="show-foot"><span id="showcount"></span><span class="hint">← → keys, swipe or click the slide · F for full screen · N for notes</span></div>
+</div>
+
 <div id="reader" class="reader" hidden>
   <div class="bar">
     <button class="btn" type="button" id="back">← Library</button>
     <span class="title" id="rtitle"></span>
+    <span class="rdl" id="rdl"></span>
     <div class="pager">
       <label for="pgnum">Page</label>
       <input id="pgnum" type="number" min="1" inputmode="numeric">
@@ -301,6 +354,13 @@ h1 { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 6vw, 
 
   function show(key) {
     var labEl = document.getElementById('lab');
+    var showEl = document.getElementById('show');
+    var pm = key.match(/^present-([a-z0-9]+?)(?:-(\d+))?$/);
+    if (pm && SHOWS[pm[1]]) {
+      reader.hidden = true; lib.hidden = true; labEl.hidden = true; teardown(); showEl.hidden = false;
+      openShow(pm[1], pm[2] ? +pm[2] : 1); return;
+    }
+    showEl.hidden = true; closeShow();
     if (key === 'scenarios' || /^scenario-\d+$/.test(key)) {
       reader.hidden = true; lib.hidden = true; teardown(); labEl.hidden = false; renderLab(key); window.scrollTo(0, 0); return;
     }
@@ -340,10 +400,86 @@ h1 { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 6vw, 
     body.querySelectorAll('[data-go]').forEach(function (b) { b.addEventListener('click', function () { location.hash = b.getAttribute('data-go'); }); });
   }
   document.getElementById('labback').addEventListener('click', function () { location.hash = ''; });
+
+  var SHOWS = { ff1slides: 'Firefighter I Lectures', ff2slides: 'Firefighter II Lectures', emsslides: 'First Responder EMS Lectures' };
+  var sh = { key: null, slides: [], i: 0, cache: {}, notes: false, tok: 0 };
+  var showImg = document.getElementById('showimg');
+  function openShow(key, n) {
+    if (sh.key === key && sh.slides.length) { goSlide(n - 1, true); return; }
+    sh.key = key; sh.slides = []; var tok = ++sh.tok;
+    document.getElementById('showtitle').textContent = SHOWS[key];
+    document.getElementById('showcount').textContent = 'Loading…';
+    showImg.removeAttribute('src');
+    fetch('slides/' + key + '.json').then(function (r) { return r.json(); }).then(function (list) {
+      if (tok !== sh.tok) return;
+      sh.slides = list;
+      document.getElementById('showjump').innerHTML = list.map(function (x, k) {
+        return '<option value="' + (k + 1) + '">' + (k + 1) + ' · ' + esc(x.code) + ' — ' + esc(x.title) + '</option>';
+      }).join('');
+      goSlide(n - 1, true);
+    }).catch(function () { document.getElementById('showcount').textContent = 'Could not load the slides.'; });
+  }
+  function closeShow() {
+    if (!sh.key) return;
+    sh.key = null; sh.slides = []; sh.tok++;
+    if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
+  }
+  function preload(k) { var x = sh.slides[k]; if (x && !sh.cache[k]) { var im = new Image(); im.src = x.img; sh.cache[k] = im; } }
+  function goSlide(k, fromRoute) {
+    if (!sh.slides.length) return;
+    k = Math.max(0, Math.min(sh.slides.length - 1, k)); sh.i = k;
+    var x = sh.slides[k];
+    showImg.src = x.img; showImg.alt = 'Slide ' + (k + 1) + ': ' + x.title;
+    document.getElementById('showcount').textContent = 'Slide ' + (k + 1) + ' of ' + sh.slides.length;
+    document.getElementById('showjump').value = String(k + 1);
+    document.getElementById('notestext').textContent = x.notes || 'No notes for this slide.';
+    preload(k + 1); preload(k - 1); preload(k + 2);
+    var h = 'present-' + sh.key + (k ? '-' + (k + 1) : '');
+    if (!fromRoute && location.hash.slice(1) !== h) history.replaceState(null, '', '#' + h);
+  }
+  function step(d) { goSlide(sh.i + d); }
+  document.getElementById('showprev').addEventListener('click', function () { step(-1); });
+  document.getElementById('shownext').addEventListener('click', function () { step(1); });
+  showImg.addEventListener('click', function (e) {
+    var r = showImg.getBoundingClientRect(); step(e.clientX - r.left < r.width / 3 ? -1 : 1);
+  });
+  document.getElementById('showjump').addEventListener('change', function (e) { goSlide(+e.target.value - 1); });
+  function toggleNotes() {
+    sh.notes = !sh.notes; document.getElementById('notesbox').hidden = !sh.notes;
+    document.getElementById('shownotes').setAttribute('aria-pressed', String(sh.notes));
+  }
+  document.getElementById('shownotes').addEventListener('click', toggleNotes);
+  function toggleFull() {
+    var el = document.getElementById('show');
+    if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
+    else if (el.requestFullscreen) el.requestFullscreen().catch(function () {});
+  }
+  document.getElementById('showfull').addEventListener('click', toggleFull);
+  document.getElementById('showback').addEventListener('click', function () { location.hash = ''; });
+  document.addEventListener('keydown', function (e) {
+    if (!sh.key || document.getElementById('show').hidden) return;
+    if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+    var k = e.key;
+    if (k === 'ArrowRight' || k === 'PageDown' || k === ' ' || k === 'Enter') { e.preventDefault(); step(1); }
+    else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); step(-1); }
+    else if (k === 'Home') goSlide(0);
+    else if (k === 'End') goSlide(sh.slides.length - 1);
+    else if (k === 'f' || k === 'F') toggleFull();
+    else if (k === 'n' || k === 'N') toggleNotes();
+    else if (k === 'Escape' && !document.fullscreenElement) location.hash = '';
+  });
+  var tx = null;
+  document.querySelector('.stage').addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+  document.querySelector('.stage').addEventListener('touchend', function (e) {
+    if (tx === null) return; var dx = e.changedTouches[0].clientX - tx; tx = null;
+    if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+  });
   function route() { show(location.hash.replace('#', '')); }
 
+  var DL = {"taskbook": [["PDF", "gsvfd-taskbook.pdf"]], "guide": [["PDF", "gsvfd-instructor-guide.pdf"]], "ff1slides": [["PPTX", "gsvfd-ff1-slides.pptx"], ["PDF", "gsvfd-ff1-slides.pdf"]], "ff2slides": [["PPTX", "gsvfd-ff2-slides.pptx"], ["PDF", "gsvfd-ff2-slides.pdf"]], "emsguide": [["PDF", "gsvfd-ems-guide.pdf"]], "emsslides": [["PPTX", "gsvfd-ems-slides.pptx"], ["PDF", "gsvfd-ems-slides.pdf"]], "scenarios": [["PDF", "gsvfd-ems-guide.pdf"]], "protocols": [["PDF", "wise-fr-protocols.pdf"]], "suppression": [["PDF", "sffma-ff1-instructional.pdf"]], "ff2": [["PDF", "sffma-ff2-instructional.pdf"]]};
   document.querySelectorAll('[data-open]').forEach(function (b) {
-    b.addEventListener('click', function () { location.hash = b.getAttribute('data-open'); });
+    b.addEventListener('click', function (e) { if (e.target.closest('.dl')) return; location.hash = b.getAttribute('data-open'); });
+    b.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target === b) { e.preventDefault(); location.hash = b.getAttribute('data-open'); } });
   });
   document.getElementById('back').addEventListener('click', function () { location.hash = ''; });
   window.addEventListener('hashchange', route);
@@ -359,6 +495,7 @@ h1 { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 6vw, 
     var p = PACKETS[key]; var token = state.token;
     state.key = key; state.zoom = 1; state.current = 1;
     document.getElementById('rtitle').textContent = p.title;
+    document.getElementById('rdl').innerHTML = (SHOWS[key] ? '<a href="#present-' + key + '">▶ Present</a>' : '') + (DL[key] || []).map(function (d) { return '<a href="' + d[1] + '" download>Download ' + d[0] + '</a>'; }).join('');
     var noun = p.noun || 'skills';
     document.getElementById('filterlabel').textContent = noun === 'skills' ? 'Skills' : 'Sections';
     filterEl.placeholder = noun === 'skills' ? 'Search skills, e.g. ladder' : (state.key === 'protocols' || state.key === 'emsguide' ? 'Search, e.g. burns' : 'Search sections, e.g. SCBA');
